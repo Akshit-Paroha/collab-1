@@ -16,3 +16,41 @@ Price:101625INR
 Jewellry name:bangle
 Jwellry code:jw1001
 Price:86626INR
+Jewellery Name: 
+Jewellery Code: 
+Price: 1.82804e-322 INR
+Jewellery Name: 
+Jewellery Code: 
+Price: 1.82804e-322 INR
+Jewellery Name: necklace
+Jewellery Code: jwnecklace1001
+Price: 60035 INR
+ring
+jwring1
+45035
+bangle
+jwbangle1
+70070
+earing
+jwearing1
+95070
+earing
+jwearing1
+64049
+earing
+jwearing1
+89680
+bracelet
+jwbracelet2
+103950
+ring
+jwring3
+49650
+necklace|jwnecklace1|130105
+ring|jwring1|54650
+Ring
+jwRing6
+53875
+necklace
+jwnecklace7
+38875
