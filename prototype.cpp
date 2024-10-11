@@ -3,7 +3,6 @@
 #include <string>
 #include <conio.h>
 using namespace std;
-
 class admin
 {
 private:
@@ -51,7 +50,6 @@ public:
         return password;
     }
 };
-
 class jewellery
 {
 public:
