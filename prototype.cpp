@@ -143,9 +143,9 @@ public:
             return;
         }
 
-        ofile << itemname << endl;
-        ofile << itemcode << endl;
-        ofile << finalprice << endl;
+        ofile << itemname << "|";
+        ofile << itemcode << "|";
+        ofile << finalprice << "|";
         ofile.close();
 
         ofstream codeFile("itemcode.txt", ios::app);
@@ -178,7 +178,7 @@ public:
         }
     }
 
-    void searchItem(const string &searchCode)
+    /*void searchItem(const string &searchCode)
     {
         string name;
         double price;
@@ -211,7 +211,7 @@ public:
         }
 
         inFile.close();
-    }
+    }*/
 };
 
 int jewellery::nextitem = 1;
