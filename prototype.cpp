@@ -3,6 +3,7 @@
 #include <string>
 #include <conio.h>
 using namespace std;
+
 class admin
 {
 private:
@@ -50,6 +51,7 @@ public:
         return password;
     }
 };
+
 class jewellery
 {
 public:
@@ -81,6 +83,7 @@ public:
         itemcode = "jw" + itemname + to_string(item);
         stoneprice = calculatestoneprice();
         finalprice = calculateprice();
+        writefile();
     }
 
     double calculatestoneprice()
@@ -124,37 +127,35 @@ public:
         return calculatekarat() * goldprice * weight * qty + stoneprice;
     }
 
-    void displaydetails()
-    {
-        cout << "\nJewellery Name: " << itemname << endl;
-        cout << "Jewellery Code: " << itemcode << endl;
-        cout << "Price: " << finalprice << " INR" << endl;
-        writefile();
-    }
-
     void writefile()
     {
-        ofstream ofile("details.txt", ios::app);
+        ofstream ofile("details.txt");
         if (!ofile)
         {
             cerr << "Failed to open file!" << endl;
             return;
         }
 
-        ofile << itemname << "|";
-        ofile << itemcode << "|";
-        ofile << finalprice << "|";
+        ofile << "Item Name: " << itemname << "|";
+        ofile << "Item code: " << itemcode << "|";
+        ofile << "Final price: " << finalprice << endl;
         ofile.close();
+    }
 
-        ofstream codeFile("itemcode.txt", ios::app);
-        if (!codeFile)
+    void readfile()
+    {
+        ifstream ifile("details.txt");
+        if (!ifile)
         {
-            cerr << "Failed to open itemcode file!" << endl;
+            cerr << "Failed to open file!" << endl;
             return;
         }
-
-        codeFile << itemcode << endl;
-        codeFile.close();
+        string line;
+        while (getline(ifile, line))
+        {
+            cout << line << endl;
+        }
+        ifile.close();
     }
 
     static void setNextItem()
@@ -175,44 +176,74 @@ public:
             codeFile.close();
         }
     }
+};
 
-    /*void searchItem(const string &searchCode)
+int jewellery::nextitem = 101;
+
+class inventory
+{
+public:
+    void writefile(jewellery &j)
     {
-        string name;
-        double price;
-        ifstream inFile("details.txt");
-        if (!inFile)
+        ofstream ofile("inventory.txt", ios::app);
+        if (!ofile)
         {
-            cerr << "Error opening file for reading!" << endl;
+            cerr << "Failed to open file!" << endl;
             return;
         }
 
-        bool found = false;
-        while (getline(inFile, name) && getline(inFile, itemcode) && (inFile >> price))
-        {
-            inFile.ignore(); // Ignore the newline character after reading the price
+        ofile << j.itemname << "|";
+        ofile << j.itemcode << "|";
+        ofile << j.finalprice << "|";
+        ofile << j.qty << endl;
+        ofile.close();
+    }
 
-            if (itemcode == searchCode)
+    void readfile()
+    {
+        ifstream ifile("inventory.txt");
+        if (!ifile)
+        {
+            cerr << "Failed to open file!" << endl;
+            return;
+        }
+        string line;
+        while (getline(ifile, line))
+        {
+            cout << line << endl;
+        }
+        ifile.close();
+    }
+
+    void searchitem()
+    {
+        ifstream i("inventory.txt");
+        if (!i)
+        {
+            cerr << "Failed to open file" << endl;
+            return;
+        }
+        string searchCode;
+        string line;
+        bool found = false;
+        cout << "Enter the jewellery code to search: ";
+        cin >> searchCode;
+        while (getline(i, line))
+        {
+            if (line.find(searchCode) != string::npos)
             {
-                cout << "\nItem found:\n";
-                cout << "Jewellery Name: " << name << endl;
-                cout << "Jewellery Code: " << itemcode << endl;
-                cout << "Price: " << price << " INR" << endl;
+                cout << "Item Name|Item Code|Price" << endl;
+                cout << line << endl;
                 found = true;
-                break;
             }
         }
-
         if (!found)
         {
-            cout << "No item found with the code: " << searchCode << endl;
+            cout << "Can't find the given item code in the file" << endl;
         }
-
-        inFile.close();
-    }*/
+        i.close();
+    }
 };
-
-int jewellery::nextitem = 1;
 
 int main()
 {
@@ -224,12 +255,12 @@ int main()
 
     jewellery j;
     j.input();
-    j.displaydetails();
+    j.readfile();
 
-    string searchCode;
-    cout << "Enter the jewellery code to search: ";
-    cin >> searchCode;
-    j.searchItem(searchCode);
+    inventory i;
+    i.writefile(j);
+    i.readfile();
+    i.searchitem();
 
     return 0;
 }
