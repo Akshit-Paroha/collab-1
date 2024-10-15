@@ -46,8 +46,7 @@ public:
                 cout << '*';
             }
         }
-        cout << endl
-             << endl;
+        cout << endl<< endl;
         return password;
     }
 
@@ -56,19 +55,15 @@ public:
 
 class jewellery : public admin
 {
-protected:
-    static int nextitem;
-
 public:
     string itemcode, itemname;
     int goldprice;
     double weight, stoneprice, finalprice, qty;
-    int stone, karat, item;
+    int stone, karat;
 
     jewellery()
     {
         goldprice = 7700;
-        item = nextitem++;
     }
 
     void input()
@@ -83,7 +78,9 @@ public:
         cin >> qty;
         cout << "Enter gold purity:\n1) 23+\n2) 22\n3) 21\n4) 20\n5) 18\n6) lesser\nSelect Your option: ";
         cin >> karat;
-        itemcode = "jw" + itemname + to_string(item);
+
+        int lineCount = countLines("itemcode.txt");
+        itemcode = "jw" + itemname + to_string(lineCount + 1);
         stoneprice = calculatestoneprice();
         finalprice = calculateprice();
     }
@@ -126,7 +123,7 @@ public:
 
     double calculateprice()
     {
-        return calculatekarat() * goldprice * weight * qty + stoneprice;
+        return calculatekarat() * goldprice * weight * qty + stoneprice *1.08;//1.08 multiplied for 3% tax and 5% making charges
     }
 
     void display()
@@ -137,9 +134,19 @@ public:
         cout << "Quantity: " << qty << endl;
         cout << "Final Price: " << finalprice << endl;
     }
-};
 
-int jewellery::nextitem = 101;
+    int countLines(const string &filename)
+    {
+        ifstream file(filename);
+        int count = 100;
+        string line;
+        while (getline(file, line))
+        {
+            ++count;
+        }
+        return count;
+    }
+};
 
 class inventory : public jewellery
 {
@@ -148,13 +155,16 @@ public:
     {
         input();
         ofstream ofile("inventory.txt", ios::app);
-        if (!ofile)
+        ofstream codeFile("itemcode.txt", ios::app);
+        if (!ofile || !codeFile)
         {
             cerr << "Failed to open file!" << endl;
             return;
         }
         ofile << itemname << "|" << itemcode << "|" << finalprice << "|" << qty << endl;
+        codeFile << itemcode << endl;
         ofile.close();
+        codeFile.close();
 
         cout << "\nItem added to inventory:\n";
         display();
@@ -256,7 +266,7 @@ public:
     }
 };
 
-class sales : public jewellery
+class sales : public jewellery, public customer
 {
 public:
     void createBill(inventory &inv, customer &cust)
